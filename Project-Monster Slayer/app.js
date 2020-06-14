@@ -1,10 +1,11 @@
-new Vue({
+var vm = new Vue({
     el: '#app',
     data: {
         playerHealth: 100,
         monsterHealth: 100,
         gameState: false,
         specAttackAvailable: false,
+        gameLog: [],
     },
     methods: {
         startGame: function(){
@@ -14,25 +15,62 @@ new Vue({
             this.specAttackAvailable = false;
         },
         attack: function(){
-            this.playerHealth -= getRandomInRange(0,20);
-            this.monsterHealth -= getRandomInRange(0,25);
+            let monsterDamage = getRandomInRange(0,20);
+            this.playerHealth -= monsterDamage;
+            this.gameLog.unshift("[怪兽攻击]玩家受到怪兽的" + monsterDamage + "点伤害");
+            let playerDamage = getRandomInRange(0,25);
+            this.monsterHealth -= playerDamage;
+            this.gameLog.unshift("[普通攻击]玩家对怪兽造成" + playerDamage + "点伤害");
             this.specAttackAvailable = Math.round(Math.random())?false:true;
         },
         specAttack: function(){
-            if (this.specAttackAvailable === 1){
-                this.playerHealth -= getRandomInRange(0,20);
-                this.monsterHealth -= getRandomInRange(0,50);
+            if (this.specAttackAvailable === true){
+                let monsterDamage = getRandomInRange(0,20);
+                this.playerHealth -= monsterDamage;
+                this.gameLog.unshift("[怪兽攻击]玩家受到怪兽的" + monsterDamage + "点伤害");
+                let playerDamage = getRandomInRange(0,50);
+                this.monsterHealth -= playerDamage;
+                this.gameLog.unshift("[特殊攻击]玩家对怪兽造成" + playerDamage + "点伤害");
+                this.specAttackAvailable = Math.round(Math.random())?false:true;
             }else{
                 alert("您当前无法使用特殊攻击!");
             }
         },
         heal: function(){
-            this.playerHealth += getRandomInRange(0,50) -= getRandomInRange(0,20);
+            let playerHeal = getRandomInRange(0,50);
+            this.playerHealth += playerHeal;
+            this.gameLog.unshift("[恢复]玩家恢复" + playerHeal + "点体力");
+            let monsterDamage = getRandomInRange(0,20);
+            this.playerHealth -= monsterDamage;
+            this.gameLog.unshift("[怪兽攻击]玩家受到怪兽的" + monsterDamage + "点伤害");
+            if (this.playerHealth > 100){
+                this.playerHealth = 100;
+            }
+        },
+    },
+    watch: {
+        playerHealth: function(){
+            if (this.playerHealth <= 0){
+                if (confirm("您输了!是否再来一局?")){
+                    this.startGame();
+                }else{
+                    this.gameState = false;
+                }
+            }
+        },
+        monsterHealth: function(){
+            if (this.monsterHealth <= 0){
+                if (confirm("您赢了!是否再来一局?")){
+                    this.startGame();
+                }else{
+                    this.gameState = false;
+                }
+            }
         }
     },
 })
 
 function getRandomInRange(min, max) {
-    return Math.random() * (max - min) + min;
+    return Math.floor(Math.random() * (max - min) + min);
   }
   
