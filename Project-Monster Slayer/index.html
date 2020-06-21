@@ -42,11 +42,11 @@
             <button id="give-up" @click="gameState = false;">GIVE UP</button>
         </div>
     </section>
-    <section class="row log">
+    <section class="row log" v-if="this.gameLog.length > 0">
         <div class="small-12 columns">
             <ul>
-                <li v-for="log in gameLog">
-                    {{log}}
+                <li v-for="log in gameLog" :style="{color: log.color}">
+                    {{log.message}}
                 </li>
             </ul>
         </div>
