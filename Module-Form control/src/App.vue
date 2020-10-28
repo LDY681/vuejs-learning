@@ -45,6 +45,11 @@
                             rows="5"
                             class="form-control"
                             v-model="message"></textarea>
+                                 <textarea
+                            id="message2"
+                            rows="5"
+                            class="form-control"
+                            v-model="message"></textarea>
                 </div>
             </div>
             <div class="row">
